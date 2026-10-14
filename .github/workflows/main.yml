@@ -14,7 +14,15 @@ jobs:
         uses: actions/checkout@v4
       
       - name: maven Build
-        run: mvn clean install
+        run: mvn install
+
+      - name: Show Maven test reports
+        if: always()
+        run: |
+            echo "===== Test Results ====="
+            find target/surefire-reports -type f -maxdepth 1 -print
+            grep -R -E '<failure|<error|Tests run:' target/surefire-reports || true
+
   
   Testing:
     runs-on: ubuntu-latest
@@ -24,17 +32,11 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Run Test on main branch
-        run: mvn clean test
+        run: mvn test
 
       - name: Checkstyle
         run: mvn checkstyle:checkstyle
 
-      - name: Show Maven test reports
-        if: always()
-        run: |
-            echo "===== Test Results ====="
-            find target/surefire-reports -type f -maxdepth 1 -print
-            grep -R -E '<failure|<error|Tests run:' target/surefire-reports || true
-
+      
 
 
