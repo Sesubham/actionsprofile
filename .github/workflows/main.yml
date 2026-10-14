@@ -29,5 +29,12 @@ jobs:
       - name: Checkstyle
         run: mvn checkstyle:checkstyle
 
+      - name: Show Maven test reports
+        if: always()
+        run: |
+            echo "===== Test Results ====="
+            find target/surefire-reports -type f -maxdepth 1 -print
+            grep -R -E '<failure|<error|Tests run:' target/surefire-reports || true
+
 
 
